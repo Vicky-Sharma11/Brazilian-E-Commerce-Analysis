@@ -1,10 +1,18 @@
--- Database creation 
+-- ============================================================
+-- Database Creation
+-- Creates the database for the Olist e-commerce analysis.
+-- ============================================================
 
 CREATE DATABASE olist_ecommerce ;
 
--- Creating tables 
+-- ============================================================
+-- Table Creation
+-- Creates the tables required to store customers, orders,
+-- products, sellers, payments, reviews, and location data.
+-- ============================================================
 
 -- Customer table
+-- Stores customer details and location information.
 
 CREATE TABLE Customers (
     customer_id VARCHAR(100) PRIMARY KEY
@@ -14,8 +22,9 @@ CREATE TABLE Customers (
     ,customer_state VARCHAR(2)
 ) ;
 
-
--- Orders Table
+-- Orders table
+-- Stores order status, timestamps, and the customer linked
+-- to each order.
 
 CREATE TABLE orders(
     order_id VARCHAR(100) PRIMARY KEY
@@ -32,7 +41,8 @@ CREATE TABLE orders(
         REFERENCES Customers (customer_id)
 ) ;
 
--- Product category name transalation table
+-- Product category translation table
+-- Converts the original Portuguese category names into English.
 
 CREATE TABLE product_category_name_translation (
     product_category_name VARCHAR(50) PRIMARY KEY
@@ -40,6 +50,8 @@ CREATE TABLE product_category_name_translation (
 ) ;
 
 -- Product table
+-- Stores product attributes such as category, dimensions,
+-- weight, description length, and number of photos.
 
 CREATE TABLE products (
     product_id VARCHAR(100) PRIMARY KEY
@@ -58,7 +70,8 @@ CREATE TABLE products (
 
 ) ;
 
--- Sellers Table
+-- Sellers table
+-- Stores seller identification and location information.
 
 CREATE TABLE sellers (
     seller_id VARCHAR(100) PRIMARY KEY
@@ -66,6 +79,10 @@ CREATE TABLE sellers (
     ,seller_city VARCHAR (100)
     ,seller_state VARCHAR (2)
 ) ;
+
+-- Order items table
+-- Stores the products and sellers associated with each order,
+-- along with item price and freight charges.
 
 CREATE TABLE order_items(
     order_id VARCHAR (100)
@@ -91,6 +108,10 @@ CREATE TABLE order_items(
         REFERENCES sellers (seller_id)
 ) ;
 
+-- Order payments table
+-- Stores payment methods, installments, and payment values
+-- for each order.
+
 CREATE TABLE order_payments (
     order_id VARCHAR (100)
     ,payment_sequential INT
@@ -104,6 +125,9 @@ CREATE TABLE order_payments (
         FOREIGN KEY (order_id)
         REFERENCES orders (order_id)
 ) ;
+
+-- Order reviews table
+-- Stores customer ratings, comments, and review timestamps.
 
 CREATE TABLE order_reviews  (
     review_id VARCHAR (100)
@@ -122,6 +146,10 @@ CREATE TABLE order_reviews  (
 )
 ;
 
+-- Geolocation table
+-- Stores geographic coordinates and location details
+-- associated with Brazilian zip code prefixes.
+
 CREATE TABLE geolocation (
     geolocation_zip_code VARCHAR(5)
     ,geolocation_lat NUMERIC(10,8)
@@ -131,51 +159,74 @@ CREATE TABLE geolocation (
 )
 ;
 
--- Loading data into tables
+-- ============================================================
+-- Loading Data
+-- Imports the raw CSV files into their corresponding tables.
+-- ============================================================
+
+-- Load customer data
 
 COPY customers
 FROM 'C:/Users/VICKY/OneDrive/Desktop/Brazilian-E-Commerce-Analysis/data/raw/olist_customers_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
 
+-- Load orders data
+
 COPY orders
 FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\olist_orders_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
+
+-- Load sellers data
 
 COPY sellers
 FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\olist_sellers_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
 
+-- Load product category translation data
+
 COPY product_category_name_translation
 FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\product_category_name_translation.csv'
 DELIMITER ','
 CSV HEADER ;
 
+-- Remove the foreign key because some product categories
+-- do not have a matching entry in the translation table.
 
 ALTER TABLE products
 DROP CONSTRAINT fk_products_product_category ;
+
+-- Load products data
 
 COPY products
 FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\olist_products_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
 
+-- Load order items data
+
 COPY order_items
 FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\olist_order_items_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
+
+-- Load order payments data
 
 COPY order_payments
 FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\olist_order_payments_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
 
+-- Load order reviews data
+
 COPY order_reviews
 FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\olist_order_reviews_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
+
+-- Load geolocation data
 
 COPY geolocation
 FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\olist_geolocation_dataset.csv'
