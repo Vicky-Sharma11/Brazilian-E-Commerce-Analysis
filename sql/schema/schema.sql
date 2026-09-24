@@ -167,28 +167,28 @@ CREATE TABLE geolocation (
 -- Load customer data
 
 COPY customers
-FROM 'C:/Users/VICKY/OneDrive/Desktop/Brazilian-E-Commerce-Analysis/data/raw/olist_customers_dataset.csv'
+FROM 'data/raw/olist_customers_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
 
 -- Load orders data
 
 COPY orders
-FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\olist_orders_dataset.csv'
+FROM 'data/raw/olist_orders_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
 
 -- Load sellers data
 
 COPY sellers
-FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\olist_sellers_dataset.csv'
+FROM 'data/raw/olist_sellers_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
 
 -- Load product category translation data
 
 COPY product_category_name_translation
-FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\product_category_name_translation.csv'
+FROM 'data/raw/product_category_name_translation.csv'
 DELIMITER ','
 CSV HEADER ;
 
@@ -201,35 +201,35 @@ DROP CONSTRAINT fk_products_product_category ;
 -- Load products data
 
 COPY products
-FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\olist_products_dataset.csv'
+FROM 'data/raw/olist_products_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
 
 -- Load order items data
 
 COPY order_items
-FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\olist_order_items_dataset.csv'
+FROM 'data/raw/olist_order_items_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
 
 -- Load order payments data
 
 COPY order_payments
-FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\olist_order_payments_dataset.csv'
+FROM 'data/raw/olist_order_payments_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
 
 -- Load order reviews data
 
 COPY order_reviews
-FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\olist_order_reviews_dataset.csv'
+FROM 'data/raw/olist_order_reviews_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
 
 -- Load geolocation data
 
 COPY geolocation
-FROM 'C:\Users\VICKY\OneDrive\Desktop\Brazilian-E-Commerce-Analysis\data\raw\olist_geolocation_dataset.csv'
+FROM 'data/raw/olist_geolocation_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
 
