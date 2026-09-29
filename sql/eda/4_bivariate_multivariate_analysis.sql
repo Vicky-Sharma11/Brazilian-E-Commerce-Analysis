@@ -1,4 +1,7 @@
+
+-- =====================================================================================================================
 -- Bivariate analysis
+-- =====================================================================================================================
 
 -- Do late deliveries tend to receive lower review scores?
 
@@ -8,7 +11,7 @@ WITH order_type AS (
         ,CASE
             WHEN DATE(delivered_to_customer_at) > DATE(estimated_delivery_timestamp)  THEN 'Late'
             ELSE 'On time'
-    END AS order_type
+        END AS order_type
     FROM orders
     WHERE order_status = 'delivered'
 )
@@ -66,7 +69,7 @@ GROUP BY ct.customer_type ;
 -- Single-order customers have a higher average order value (138.62)
 -- compared to repeat customers (124.91).
 
--- Does total order value varies across states ?
+-- Does total order value varies across states?
 
 SELECT
     c.customer_state
@@ -74,23 +77,51 @@ SELECT
 FROM customers AS c
 JOIN orders AS o
     ON c.customer_id = o.customer_id
+    AND o.order_status = 'delivered'
 JOIN order_items AS ot
     ON ot.order_id = o.order_id
 GROUP BY c.customer_state
 ORDER BY total_order_value DESC ;
 
+-- Does high weighted product tend to have higher freight cost?
 
--- Does average item level price differ across categories?
+
+SELECT 
+CORR(product_weight_g, freight_value)
+FROM products AS p
+JOIN order_items AS ot
+    ON p.product_id = ot.product_id ;
+
+-- correlation of 0.61 suggest there is moderate to strong relationship
+
+-- =====================================================================================================================
+-- Multivariate analysis
+-- =====================================================================================================================
+
+-- How do monthly sales trends vary across states?
+
+SELECT
+    DATE_TRUNC('MONTH', o.purchase_timestamp) AS mnth
+    ,c.customer_state
+    ,SUM(ot.price) AS sales
+FROM orders AS o
+JOIN customers AS c
+    ON c.customer_id = o.customer_id
+    AND o.order_status = 'delivered'
+JOIN order_items AS ot
+    ON o.order_id = ot.order_id
+GROUP BY DATE_TRUNC('MONTH', o.purchase_timestamp), c.customer_state
+ORDER BY c.customer_state, DATE_TRUNC('MONTH', o.purchase_timestamp)  ;
+
+-- How do products perform in their respective category based on sales?
 
 SELECT
     p.product_category_name
-    ,AVG(oi.price) AS avg_price
-FROM order_items AS oi
+    ,p.product_id
+    ,SUM(ot.price) AS sales
+FROM order_items AS ot
 JOIN products AS p
-    ON oi.product_id = p.product_id
-WHERE product_category_name IS NOT NULL
-GROUP BY p.product_category_name
-ORDER BY avg_price DESC ;
-
-
+    ON ot.product_id = p.product_id
+GROUP BY p.product_category_name, p.product_id
+ORDER BY product_category_name, sales DESC ;
 
