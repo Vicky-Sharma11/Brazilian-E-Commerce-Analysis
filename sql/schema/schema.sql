@@ -233,5 +233,10 @@ FROM 'data/raw/olist_geolocation_dataset.csv'
 DELIMITER ','
 CSV HEADER ;
 
+-- Renamed columns correctly 
 
+ALTER TABLE geolocation
+RENAME COLUMN geolocation_zip_code TO geolocation_zip_code_prefix ;
 
+ALTER TABLE geolocation
+RENAME COLUMN geolocation_long TO geolocation_lng ;
