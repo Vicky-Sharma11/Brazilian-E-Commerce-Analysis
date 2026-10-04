@@ -44,6 +44,7 @@ WITH customer_type AS (
     FROM customers AS c
     JOIN orders AS o
         ON c.customer_id = o.customer_id
+        AND o.order_status = 'delivered'
     GROUP BY c.customer_unique_id 
 )
 , total_value_per_customer_per_order AS (
@@ -54,6 +55,7 @@ WITH customer_type AS (
     FROM orders AS o
     JOIN order_items AS ot
         ON o.order_id = ot.order_id
+        AND order_status = 'delivered'
     JOIN customers AS c
         ON c.customer_id = o.customer_id 
     GROUP BY c.customer_unique_id, o.order_id 
@@ -69,11 +71,11 @@ GROUP BY ct.customer_type ;
 -- Single-order customers have a higher average order value (138.62)
 -- compared to repeat customers (124.91).
 
--- Does total order value varies across states?
+-- Does total revenue varies across states?
 
 SELECT
     c.customer_state
-    ,SUM(price + freight_value) AS total_order_value
+    ,SUM(price + freight_value) AS total_revenue
 FROM customers AS c
 JOIN orders AS o
     ON c.customer_id = o.customer_id
@@ -81,29 +83,30 @@ JOIN orders AS o
 JOIN order_items AS ot
     ON ot.order_id = o.order_id
 GROUP BY c.customer_state
-ORDER BY total_order_value DESC ;
+ORDER BY total_revenue DESC ;
 
 -- Does high weighted product tend to have higher freight cost?
 
 
 SELECT 
-CORR(product_weight_g, freight_value)
+    CORR(product_weight_g, freight_value)
 FROM products AS p
 JOIN order_items AS ot
     ON p.product_id = ot.product_id ;
 
--- correlation of 0.61 suggest there is moderate to strong relationship
+-- correlation of 0.61 suggest there is moderate to strong relationship between product weight
+-- and freight value
 
 -- =====================================================================================================================
 -- Multivariate analysis
 -- =====================================================================================================================
 
--- How do monthly sales trends vary across states?
+-- How do monthly revenue trends vary across states?
 
 SELECT
     DATE_TRUNC('MONTH', o.purchase_timestamp) AS mnth
     ,c.customer_state
-    ,SUM(ot.price) AS sales
+    ,SUM(ot.price + ot.freight_value) AS total_revenue
 FROM orders AS o
 JOIN customers AS c
     ON c.customer_id = o.customer_id
@@ -113,12 +116,12 @@ JOIN order_items AS ot
 GROUP BY DATE_TRUNC('MONTH', o.purchase_timestamp), c.customer_state
 ORDER BY c.customer_state, DATE_TRUNC('MONTH', o.purchase_timestamp)  ;
 
--- How do products perform in their respective category based on sales?
+-- How do products perform in their respective category based on revenue?
 
 SELECT
     p.product_category_name
     ,p.product_id
-    ,SUM(ot.price) AS sales
+    ,SUM(ot.price + ot.freight_value) AS sales
 FROM order_items AS ot
 JOIN products AS p
     ON ot.product_id = p.product_id
