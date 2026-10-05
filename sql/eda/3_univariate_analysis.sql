@@ -54,9 +54,9 @@ SELECT
         ,2)
 FROM orders
 WHERE order_status = 'delivered'
-    AND DATE(delivered_to_customer_at) > DATE(estimated_delivery_timestamp) ;
+    AND delivered_to_customer_at > estimated_delivery_timestamp ;
 
--- 6,534 late deliveries, representing approximately 6.77% of delivered orders.
+-- 7826 late deliveries, representing approximately 8.11% of delivered orders.
 
 
 -- Average time taken to deliver an order ( from purchase date to delivered date)

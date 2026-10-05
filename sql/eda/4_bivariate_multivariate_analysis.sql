@@ -9,7 +9,7 @@ WITH order_type AS (
     SELECT 
         order_id
         ,CASE
-            WHEN DATE(delivered_to_customer_at) > DATE(estimated_delivery_timestamp)  THEN 'Late'
+            WHEN delivered_to_customer_at > estimated_delivery_timestamp  THEN 'Late'
             ELSE 'On time'
         END AS order_type
     FROM orders
@@ -17,7 +17,7 @@ WITH order_type AS (
 )
 SELECT
      odt.order_type
-    ,AVG(ors.review_score) AS avg_review_score
+    ,ROUND(AVG(ors.review_score),2) AS avg_review_score
 FROM order_type AS odt
 JOIN order_reviews AS ors
     ON odt.order_id = ors.order_id

@@ -18,6 +18,10 @@ FROM (
 ) ;
 
 
+/*Assumption - When multiple review records exist for the same order, the latest review is assumed
+               to represent the most recent customer feedback and is retained for analysis.
+*/
+
 /*Assuming an order having more than 1 review may be realted to 
 when customer update their rating multiple times */
 

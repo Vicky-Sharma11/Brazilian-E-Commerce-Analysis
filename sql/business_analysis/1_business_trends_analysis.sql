@@ -37,6 +37,16 @@ JOIN order_items AS ot
 GROUP BY DATE_TRUNC('MONTH', purchase_timestamp)
 ORDER BY mnth ;
 
+-- review score distribution
+
+SELECT
+    review_score
+    ,COUNT(*) AS frequency
+FROM order_reviews 
+GROUP BY review_score
+ORDER BY frequency DESC ;
+
+-- 5 start reviews dominates
 
 -- Monthly trend of average order value
 
